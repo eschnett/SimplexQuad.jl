@@ -22,7 +22,7 @@ each row contains the coordinates `(x1,...,xn)` for a vertex. The
 order of the quadrature scheme in each dimension must be the same in
 this implementation.
 
-## Sample Usage
+## Sample usage
 
 ```
     X, W = simplexquad(n, vert)     # Specify the vertices
@@ -42,6 +42,21 @@ I tested the package for up to `D=5` dimensions and order `N=10`, and
 found the integration error for polynomials of order `P≤N` (which
 should have only floating-point round-off error) to be less than
 `10eps`. This is tested by the test suite.
+
+## Results for a 2d triangle
+
+Integration points and weights for various numbers of points `N`:
+
+![N=1](figures/gauß-points-1.png)
+![N=2](figures/gauß-points-2.png)
+![N=3](figures/gauß-points-3.png)
+![N=4](figures/gauß-points-4.png)
+![N=10](figures/gauß-points-10.png)
+![N=100](figures/gauß-points-100.png)
+
+The area of the red disks corresponds to their integration weights. It
+is evident that the location of the integration points is not a tensor
+product and does not respect the symmetry of the domain.
 
 ## Trivia
 

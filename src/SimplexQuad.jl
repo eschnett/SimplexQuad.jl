@@ -159,4 +159,8 @@ function ndgrid(vs::AbstractVector{T}...) where T
     out
 end
 
+
+
+integrate(f, X, W) = sum(W[i] * f(X[i,:]) for i in 1:length(W))
+
 end
