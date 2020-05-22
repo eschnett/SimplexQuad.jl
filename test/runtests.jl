@@ -36,11 +36,12 @@ const Types = [Float32, Float64]
     # Ensure weights are strictly positive
     @test all(>(0), W)
 
-    # Expect polynomials of respective orders to be integrated exactly
+    # Expect polynomials of orders P<= to be integrated exactly
+    P = N
     pmin = CartesianIndex(ntuple(d -> 0, D))
-    pmax = CartesianIndex(ntuple(d -> N, D))
+    pmax = CartesianIndex(ntuple(d -> P, D))
     for p in pmin:pmax
-        sum(p.I) <= N || continue
+        sum(p.I) <= P || continue
         f(x) = prod(x[i]^p[i] for i in 1:D)
         computed = integrate(f, X, W)
         computed::T

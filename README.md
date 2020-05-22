@@ -39,7 +39,7 @@ To integrate a function `f`, use e.g.
 ```
 
 I tested the package for up to `D=5` dimensions and order `N=10`, and
-found the integration error for polynomials of respective order (which
+found the integration error for polynomials of order `P≤N` (which
 should have only floating-point round-off error) to be less than
 `10eps`. This is tested by the test suite.
 
