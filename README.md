@@ -45,7 +45,7 @@ should have only floating-point round-off error) to be less than
 
 ## Results for a 2d triangle
 
-Integration points and weights for various numbers of points `N`:
+Integration points and weights for various numbers of points:
 
 ![N=1](figures/gauß-points-1.png)
 ![N=2](figures/gauß-points-2.png)

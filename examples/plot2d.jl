@@ -13,10 +13,10 @@ for npoints in [1, 2, 3, 4, 10, 100]
     X, W = simplexquad(npoints, vertices)
 
     scene = Scene()
-    lines!(scene, vertices1; color=:black, linewidth=1)
+    lines!(scene, vertices1; color=:black, linewidth=3)
     scatter!(scene, X[:,1], X[:,2]; color=:red, markersize=0.3*sqrt.(W))
     text!(scene, "N=$npoints"; textsize=0.15, position=(0.5, 0.9))
-    scale!(scene, 1,1)
+    scale!(scene, 1, 1)
 
-    Makie.save("gauß-points-$npoints.png", scene; resolution=(200, 200))
+    Makie.save("figures/gauß-points-$npoints.png", scene; resolution=(500, 500))
 end
