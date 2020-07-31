@@ -2,20 +2,16 @@ using SimplexQuad
 
 using Test
 
-
-
 function integrate(f, X::AbstractMatrix, W::AbstractVector)
     np = size(X, 1)
     @assert size(W, 1) == np
-    sum(W[i] * f(X[i, :]) for i = 1:np)
+    return sum(W[i] * f(X[i, :]) for i in 1:np)
 end
-
-
 
 const Types = [Float32, Float64]
 @testset "Integrate polynomials T=$T D=$D N=$N" for T in Types,
-D = 1:5,
-N = 1:11-D
+D in 1:5,
+N in 1:(11 - D)
 
     X, W = simplexquad(T, N, D)
 
@@ -32,9 +28,9 @@ N = 1:11-D
         all(>(0), x) || return false
         all(<(1), x) || return false
         λ = 1 - sum(x)
-        0 < λ < 1
+        return 0 < λ < 1
     end
-    @test all(inside(X[i, :]) for i = 1:np)
+    @test all(inside(X[i, :]) for i in 1:np)
     # Ensure weights are strictly positive
     @test all(>(0), W)
 
@@ -42,9 +38,9 @@ N = 1:11-D
     P = N
     pmin = CartesianIndex(ntuple(d -> 0, D))
     pmax = CartesianIndex(ntuple(d -> P, D))
-    for p = pmin:pmax
+    for p in pmin:pmax
         sum(p.I) <= P || continue
-        f(x) = prod(x[i]^p[i] for i = 1:D)
+        f(x) = prod(x[i]^p[i] for i in 1:D)
         computed = integrate(f, X, W)
         computed::T
         # Mathematica suggests this neat result

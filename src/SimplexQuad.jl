@@ -2,8 +2,6 @@ module SimplexQuad
 
 using LinearAlgebra
 
-
-
 export simplexquad
 
 """
@@ -47,7 +45,7 @@ simplexquad
 function simplexquad(::Type{T}, N::Int, n::Int) where {T}
     m = n + 1
     vert = diagm(m, n, ones(T, n))
-    simplexquad(N, vert)
+    return simplexquad(N, vert)
 end
 simplexquad(N::Int, n::Int) = simplexquad(float(Int), N, n)
 
@@ -70,7 +68,7 @@ function simplexquad(N::Int, vert::AbstractMatrix{T}) where {T}
         # Find quadrature rules for higher dimensional domains
         q = Array{Vector}(undef, n)
         w = Array{Vector}(undef, n)
-        for k = 1:n
+        for k in 1:n
             q[k], w[k] = rquad(T, N, n - k)
         end
         Q = ndgrid(q...)
@@ -83,7 +81,7 @@ function simplexquad(N::Int, vert::AbstractMatrix{T}) where {T}
         W = abs(det(c[2:m, :])) * prod(w; dims = 2)
         qp = cumprod(q; dims = 2)
         e = ones(T, Nn, 1)
-        X = [e [(1 .- q[:, 1:n-1]) e] .* [e qp[:, 1:n-2] qp[:, n]]] * c
+        X = [e [(1 .- q[:, 1:(n - 1)]) e] .* [e qp[:, 1:(n - 2)] qp[:, n]]] * c
         @assert size(W, 2) == 1
         W = reshape(W, :)
     end
@@ -92,7 +90,7 @@ function simplexquad(N::Int, vert::AbstractMatrix{T}) where {T}
     @assert size(X, 2) == n
     W::Vector{T}
     @assert length(W) == size(X, 1)
-    X, W
+    return X, W
 end
 
 function rquad(::Type{T}, N::Int, k::Int) where {T}
@@ -123,10 +121,8 @@ function rquad(::Type{T}, N::Int, k::Int) where {T}
     @assert length(x) == N
     w::Vector{T}
     @assert length(w) == N
-    x, w
+    return x, w
 end
-
-
 
 # These functions were formerly a part of Julia. License is MIT:
 # https://julialang.org/license
@@ -137,12 +133,12 @@ function ndgrid(v1::AbstractVector{T}, v2::AbstractVector{T}) where {T}
     m, n = length(v1), length(v2)
     v1 = reshape(v1, m, 1)
     v2 = reshape(v2, 1, n)
-    (repeat(v1, 1, n), repeat(v2, m, 1))
+    return (repeat(v1, 1, n), repeat(v2, m, 1))
 end
 
 function ndgrid_fill(a, v, s, snext)
-    for j = 1:length(a)
-        a[j] = v[div(rem(j - 1, snext), s)+1]
+    return for j in 1:length(a)
+        a[j] = v[div(rem(j - 1, snext), s) + 1]
     end
 end
 
@@ -151,18 +147,16 @@ function ndgrid(vs::AbstractVector{T}...) where {T}
     sz = map(length, vs)
     out = ntuple(i -> Array{T}(undef, sz), n)
     s = 1
-    for i = 1:n
+    for i in 1:n
         a = out[i]::Array
         v = vs[i]
         snext = s * size(a, i)
         ndgrid_fill(a, v, s, snext)
         s = snext
     end
-    out
+    return out
 end
 
-
-
-integrate(f, X, W) = sum(W[i] * f(X[i, :]) for i = 1:length(W))
+integrate(f, X, W) = sum(W[i] * f(X[i, :]) for i in 1:length(W))
 
 end
