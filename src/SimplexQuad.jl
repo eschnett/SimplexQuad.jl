@@ -16,17 +16,18 @@ each row contains the coordinates `(x1,...,xn)` for a vertex. The
 order of the quadrature scheme in each dimension must be the same in
 this implementation.
 
-    N: Number of quadrature points
-    T: Return type (defaults to Float64)
-    n: Number of dimensions
-    vert: matrix of simplex vertex coordinates
+# Arguments
+- `N`: Number of quadrature points
+- `T`: Return type (defaults to Float64)
+- `n`: Number of dimensions
+- `vert`: matrix of simplex vertex coordinates
 
-Returns:
-    X: Matrix of quadrature points, where each row contains the
-       coordinates for a point
-    W: Array of quadrature weights
+# Result
+- `X`: Matrix of quadrature points, where each row contains the
+  coordinates for a point
+- `W`: Array of quadrature weights
 
-Sample Usage:
+# Sample Usage:
 
     X, W = simplexquad(n, vert)     # Specify the vertices
     X, W = simplexquad(T, n, dim)   # Specify the dimension and use unit simplex

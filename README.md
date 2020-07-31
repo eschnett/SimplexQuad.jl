@@ -24,9 +24,9 @@ this implementation.
 
 ## Sample usage
 
-```
-    X, W = simplexquad(n, vert)     # Specify the vertices
-    X, W = simplexquad(T, n, dim)   # Specify the dimension and use unit simplex
+```Julia
+X, W = simplexquad(n, vert)     # Specify the vertices
+X, W = simplexquad(T, n, dim)   # Specify the dimension and use unit simplex
 ```
 
 `X` will be a matrix for which the `j`th column are the grid points in
@@ -34,8 +34,8 @@ each coordinate `xj`.
 
 To integrate a function `f`, use e.g.
 
-```
-    sum(W[i] * f(X[i,:]) for i in 1:length(W))
+```Julia
+sum(W[i] * f(X[i,:]) for i in 1:length(W))
 ```
 
 I tested the package for up to `D=5` dimensions and order `N=10`, and
