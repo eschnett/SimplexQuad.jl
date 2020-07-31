@@ -52,15 +52,16 @@ simplexquad(N::Int, n::Int) = simplexquad(float(Int), N, n)
 
 function simplexquad(N::Int, vert::AbstractMatrix{T}) where {T}
     N <= 0 && @error "Number of Gauss points must be a natural number"
-    
+
     m, n = size(vert)
-    m != n+1 && @error "The matrix of vertices must have n+1 rows and n columns"
-    
+    m != n + 1 &&
+        @error "The matrix of vertices must have n+1 rows and n columns"
+
     Nn = N^n
     if n == 1
         # The 1-D simplex is only an interval
         q, w = rquad(T, N, 0)
-        len = diff(vert; dims=1)
+        len = diff(vert; dims = 1)
         X = vert[1] .+ len[1] * q
         W = abs.(len[1]) * w
         X = reshape(X, :, 1)
@@ -68,18 +69,18 @@ function simplexquad(N::Int, vert::AbstractMatrix{T}) where {T}
         # Find quadrature rules for higher dimensional domains
         q = Array{Vector}(undef, n)
         w = Array{Vector}(undef, n)
-        for k in 1:n 
+        for k = 1:n
             q[k], w[k] = rquad(T, N, n - k)
         end
         Q = ndgrid(q...)
-        q = reshape(cat(Q...; dims=n), Nn, n)
+        q = reshape(cat(Q...; dims = n), Nn, n)
         W = ndgrid(w...)
-        w = reshape(cat(W...; dims=n), Nn, n)
+        w = reshape(cat(W...; dims = n), Nn, n)
         map = zeros(T, m, m) + I
         map[2:m, 1] .= -1
         c = map * vert
-        W = abs(det(c[2:m, :])) * prod(w; dims=2)
-        qp = cumprod(q; dims=2)
+        W = abs(det(c[2:m, :])) * prod(w; dims = 2)
+        qp = cumprod(q; dims = 2)
         e = ones(T, Nn, 1)
         X = [e [(1 .- q[:, 1:n-1]) e] .* [e qp[:, 1:n-2] qp[:, n]]] * c
         @assert size(W, 2) == 1
@@ -94,28 +95,28 @@ function simplexquad(N::Int, vert::AbstractMatrix{T}) where {T}
 end
 
 function rquad(::Type{T}, N::Int, k::Int) where {T}
-    k1 = k+1
-    k2 = k+2
+    k1 = k + 1
+    k2 = k + 2
 
     n = collect(1:N)'
-    nnk = 2*n .+ k
-    A = [T(k)/k2 repeat([T(k^2)], 1, N) ./ (nnk .* (nnk .+ 2))]
+    nnk = 2 * n .+ k
+    A = [T(k) / k2 repeat([T(k^2)], 1, N) ./ (nnk .* (nnk .+ 2))]
 
     n = collect(2:N)'
     nnk = nnk[n]
-    B1 = T(4)*k1 / (k2*k2*(k+3))
+    B1 = T(4) * k1 / (k2 * k2 * (k + 3))
 
     nk = n .+ k
     nnk2 = nnk .* nnk
-    B = T(4)*(n .* nk).^2 ./ (nnk2 .* nnk2 - nnk2)
+    B = T(4) * (n .* nk) .^ 2 ./ (nnk2 .* nnk2 - nnk2)
 
-    ab = [A' [T(2^k1)/k1; B1; B']]
+    ab = [A' [T(2^k1) / k1; B1; B']]
     s = sqrt.(ab[2:N, 2])
     X, V = eigen(SymTridiagonal(ab[1:N, 1], s))
     I = sortperm(X)
     X = X[I]
-    x = (X .+ 1)/2
-    w = (T(1)/2)^k1 * ab[1,2] * V[1,I].^2
+    x = (X .+ 1) / 2
+    w = (T(1) / 2)^k1 * ab[1, 2] * V[1, I] .^ 2
 
     x::Vector{T}
     @assert length(x) == N
@@ -131,7 +132,7 @@ end
 
 ndgrid(v::AbstractVector) = copy(v)
 
-function ndgrid(v1::AbstractVector{T}, v2::AbstractVector{T}) where T
+function ndgrid(v1::AbstractVector{T}, v2::AbstractVector{T}) where {T}
     m, n = length(v1), length(v2)
     v1 = reshape(v1, m, 1)
     v2 = reshape(v2, 1, n)
@@ -140,19 +141,19 @@ end
 
 function ndgrid_fill(a, v, s, snext)
     for j = 1:length(a)
-        a[j] = v[div(rem(j-1, snext), s)+1]
+        a[j] = v[div(rem(j - 1, snext), s)+1]
     end
 end
 
-function ndgrid(vs::AbstractVector{T}...) where T
+function ndgrid(vs::AbstractVector{T}...) where {T}
     n = length(vs)
     sz = map(length, vs)
-    out = ntuple(i->Array{T}(undef, sz), n)
+    out = ntuple(i -> Array{T}(undef, sz), n)
     s = 1
-    for i=1:n
+    for i = 1:n
         a = out[i]::Array
         v = vs[i]
-        snext = s*size(a,i)
+        snext = s * size(a, i)
         ndgrid_fill(a, v, s, snext)
         s = snext
     end
@@ -161,6 +162,6 @@ end
 
 
 
-integrate(f, X, W) = sum(W[i] * f(X[i,:]) for i in 1:length(W))
+integrate(f, X, W) = sum(W[i] * f(X[i, :]) for i = 1:length(W))
 
 end

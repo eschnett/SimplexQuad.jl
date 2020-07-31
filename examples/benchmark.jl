@@ -14,15 +14,15 @@ using SimplexQuad
 @fastmath function integrate(f::F, X, W) where {F}
     @inbounds begin
         if size(X, 2) == 2
-            s = zero(W[1] * f(X[1,1], X[1,2]))
-            for i in 1:length(W)
-                s += W[i] * f(X[i,1], X[i,2])
+            s = zero(W[1] * f(X[1, 1], X[1, 2]))
+            for i = 1:length(W)
+                s += W[i] * f(X[i, 1], X[i, 2])
             end
             s
         elseif size(X, 2) == 3
-            s = zero(W[1] * f(X[1,1], X[1,2], X[1,3]))
-            for i in 1:length(W)
-                s += W[i] * f(X[i,1], X[i,2], X[i,3])
+            s = zero(W[1] * f(X[1, 1], X[1, 2], X[1, 3]))
+            for i = 1:length(W)
+                s += W[i] * f(X[i, 1], X[i, 2], X[i, 3])
             end
             s
         else
