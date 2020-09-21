@@ -1,7 +1,9 @@
 # Gaussian Quadrature for an n-dimensional simplex
 
-* [GitHub](https://github.com/eschnett/SimplexQuad.jl): Source code repository
-* [![GitHub CI](https://github.com/eschnett/SimplexQuad.jl/workflows/CI/badge.svg)](https://github.com/eschnett/SimplexQuad.jl/actions)
+* [GitHub](https://github.com/eschnett/SimplexQuad.jl): Source code
+  repository
+* [![GitHub
+  CI](https://github.com/eschnett/SimplexQuad.jl/workflows/CI/badge.svg)](https://github.com/eschnett/SimplexQuad.jl/actions)
 
 ## Provenance of this package
 
@@ -68,3 +70,8 @@ n | Domain
 2 | Triangle
 3 | Tetrahedron
 4 | Pentatope
+
+## TODO
+
+Examine `JuAFEM.jl` and its `generate_quadrature.jl` file
+<https://kristofferc.github.io/JuAFEM.jl/dev/reference/quadrature/>.
